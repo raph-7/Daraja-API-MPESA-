@@ -1,12 +1,14 @@
 <?php
+include 'dbConnection.php';
+
 header('Content-Type: application/json');
-$stkCallbackResponse = file_get_contents('php://input');
+$MPESAstkCallbackResponse = file_get_contents('php://input');
 $logFile = 'MPESAstkCallbackResponse.json';
 $log = fopen($logFile, 'a');
-fwrite($log, $stkCallbackResponse . PHP_EOL);
+fwrite($log, $MPESAstkCallbackResponse);
 fclose($log);
 
-$data = json_decode($stkCallbackResponse, true);
+$data = json_decode($MPESAstkCallbackResponse, true);
 
 
 $MerchantRequestID = $data->Body->stkCallback->MerchantRequestID;
@@ -19,5 +21,5 @@ $UserPhoneNumber = $data->Body->stkCallback->CallbackMetadata->Item[4]->Value;
 //CHECK IF THE TRASACTION WAS SUCCESSFUL 
 if ($ResultCode == 0) {
   //STORE THE TRANSACTION DETAILS IN THE DATABASE
-  mysqli_query($db, "INSERT INTO transactions (MerchantRequestID,CheckoutRequestID,ResultCode,Amount,MpesaReceiptNumber,PhoneNumber) VALUES ('$MerchantRequestID','$CheckoutRequestID','$ResultCode','$Amount','$TransactionId','$UserPhoneNumber')");
+  mysqli_query($db, "INSERT INTO transactions (MerchantRequestID,CheckoutRequestID,ResultCode,Amount,TransactionId,UserPhoneNumber) VALUES ('$MerchantRequestID','$CheckoutRequestID','$ResultCode','$Amount','$TransactionId','$UserPhoneNumber')");
 }
