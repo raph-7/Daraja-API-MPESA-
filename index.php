@@ -1,3 +1,3 @@
 <?php
 
-echo "DARAJA API W O R.";
+echo "DARAJA API W O R";
